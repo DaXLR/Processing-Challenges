@@ -1,5 +1,6 @@
 int screenSizeX = 1200;
 int screenSizeY = 1200;
+int depth = screenSizeX;
 boolean paintMode = false;
 boolean isJumping = false;
 float prevXmouse, prevYmouse;
@@ -30,6 +31,7 @@ void updateBeans() {
     Bean bean = beans.get(i);
 
     bean.update(isJumping);
+    
     if (bean.isAlive == false)
     {
       beans.remove(i);
@@ -40,7 +42,7 @@ void updateBeans() {
 void keyPressed()
 {
   if (key == 'n') {
-    beans.add(new Bean(IDcounter, mouseX, mouseY, mouseX-prevXmouse, mouseY-prevYmouse));
+    beans.add(new Bean(IDcounter, mouseX, mouseY, 600.0,  mouseX-prevXmouse, mouseY-prevYmouse, random(-100,100)));
     IDcounter += 1;
   }
   if (key == 'p') {

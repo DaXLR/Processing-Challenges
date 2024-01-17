@@ -8,9 +8,10 @@ class Bean {
   int ID;
   boolean isAlive = true;
   color body;
-  float size;
+  float baseSize;
+  float currentSize;
   float bounce;
-  float x, y, xspeed, yspeed;
+  float x, y, z, xspeed, yspeed, zspeed;
   float lifeforce, maxLifeforce;
   float stamina, maxStamina;
   float regen;
@@ -22,7 +23,7 @@ class Bean {
 
 
 
-  Bean(int id, float initialX, float initialY, float initialXspeed, float initialYspeed) {
+  Bean(int id, float initialX, float initialY, float initialZ, float initialXspeed, float initialYspeed, float initialZspeed) {
 
     red = random(0, 255);
     green = random(0, 255);
@@ -31,9 +32,12 @@ class Bean {
     ID = id;
     x = initialX;
     y = initialY;
+    z = initialZ;
     xspeed = initialXspeed;
     yspeed = initialYspeed;
-    size = random(20, 100);
+    zspeed = initialZspeed;
+    baseSize = random(20, 100);
+    currentSize = baseSize * 1.00;
     bounce = random(0.5, 0.9);
     maxLifeforce = random(50, 200);
     lifeforce = maxLifeforce;
@@ -61,7 +65,7 @@ class Bean {
     body = color(red, green, blue, 255 * lifetimeRatio);
     fill(body);
     noStroke();
-    ellipse(x, y, size, size);
+    ellipse(x, y, currentSize, currentSize);
   }
 
   void updateValues() {
@@ -109,7 +113,11 @@ class Bean {
   }
 
   void updatePosition() {
+
+    //Update de la vitesse verticale
     yspeed += gravity - drag;
+
+    //Update de la vitesse en X
     if (xspeed > 0) {
       xspeed -= drag;
     } else if (xspeed < 0) {
@@ -118,29 +126,59 @@ class Bean {
       xspeed = 0;
     }
 
+    //Update de la vitesse en Z (profondeur)
+    if (zspeed > 0) {
+      zspeed -= drag;
+    } else if (zspeed < 0) {
+      zspeed += drag;
+    } else {
+      zspeed = 0;
+    }
+
+    //Update des positions selon la vitesse
     x += xspeed;
     y += yspeed;
+    z += zspeed;
 
-    if (x > (screenSizeX - size/2))
+    //Bounce axe Z
+    if (z > depth)
     {
-      x = (screenSizeX - size/2);
+      z = depth;
+      zspeed = -(zspeed * bounce);
+    }
+
+    if (z < 0)
+    {
+      z = 0;
+      zspeed = -(zspeed * bounce);
+    }
+
+    //Bounce axe X
+    if (x > (screenSizeX - currentSize/2))
+    {
+      x = (screenSizeX - currentSize/2);
       xspeed = -(xspeed * bounce);
     }
-    if (x < (0 + size/2))
+    if (x < (0 + currentSize/2))
     {
-      x = 0 + size/2;
+      x = 0 + currentSize/2;
       xspeed = -(xspeed * bounce);
     }
-    if (y > (screenSizeY - size/2))
+
+    //Bounce axe Y
+    if (y > (screenSizeY - currentSize/2))
     {
-      y = (screenSizeY - size/2);
+      y = (screenSizeY - currentSize/2);
       yspeed = -(yspeed * bounce);
     }
-    if (y < (0 + size/2))
+    if (y < (0 + currentSize/2))
     {
-      y = 0+size/2;
+      y = 0+ currentSize/2;
       yspeed = -(yspeed * bounce);
     }
+
+    //Ajustement de la taille selon la position en Z (effet de profondeur)
+    currentSize = baseSize * (z * ((1.5/depth)) + 0.25);
   }
 
   void printDebug()
@@ -155,5 +193,7 @@ class Bean {
     println(patience);
     print("Energy: ");
     println(energy);
+    print("Z position");
+    println(z);
   }
 }
