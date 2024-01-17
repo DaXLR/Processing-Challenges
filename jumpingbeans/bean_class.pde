@@ -19,6 +19,7 @@ class Bean {
   float eagerness, patience;
   float energy, baseEnergy;
   float red, green, blue;
+  float lifetimeRatio;
 
 
 
@@ -61,15 +62,32 @@ class Bean {
 
     //printDebug();
 
-    float lifetimeRatio = lifeforce/maxLifeforce;
-    body = color(red, green, blue, 255 * lifetimeRatio);
+    body = color(red, green, blue, 255);
     fill(body);
     noStroke();
-    ellipse(x, y, currentSize, currentSize);
+
+
+    //Ajustement pour convertir la position simulee en position "screenspace"
+    float adjustedX = x/xlength * sideLength;
+    float adjustedY = y/ylength * sideLength;
+    float adjustedZ = z/zlength * sideLength;
+
+    float XpositionAlongXaxis = A.X + (cos(rightSideAngle) * adjustedX);
+    float YpositionAlongXaxis = A.Y - (sin(rightSideAngle) * adjustedX);
+    float ZpositionXoffset = cos(leftSideAngle) * adjustedZ;
+    float ZpositionYoffset = sin(leftSideAngle) * adjustedZ;
+
+
+    float screenSpaceX = XpositionAlongXaxis - ZpositionXoffset;
+    float screenSpaceY = YpositionAlongXaxis - ZpositionYoffset + adjustedY;
+
+
+    ellipse(screenSpaceX, screenSpaceY, currentSize, currentSize);
   }
 
   void updateValues() {
-    float lifetimeRatio = lifeforce/maxLifeforce;
+    
+    lifetimeRatio = lifeforce/maxLifeforce;
     float staminaRatio = stamina/maxStamina;
     float finalRatio = ((0.3*lifetimeRatio) + (0.7*staminaRatio));
     energy = finalRatio * baseEnergy;
@@ -95,6 +113,7 @@ class Bean {
 
     if (result > rollTarget) { //We get a jump
       float xpower = random(minPower, maxPower);
+      float zpower = random(minPower, maxPower);
       float ypower = 1.5*(random(minPower, maxPower));
       stamina -= ypower + ypower; //Deduct stamina
 
@@ -104,8 +123,13 @@ class Bean {
       if (round(random(1)) == 0) {
         ypower = -ypower;
       }
+      if (round(random(1)) == 0) {
+        zpower = -zpower;
+      }
       xspeed += xpower;
       yspeed += ypower;
+      zspeed += zpower;
+      
       patience = 0;
     } else {
       patience += eagerness;
@@ -118,7 +142,7 @@ class Bean {
     yspeed += gravity - drag;
 
     //Update de la vitesse en X
-    if (xspeed > 0) {
+    if (xspeed > drag) {
       xspeed -= drag;
     } else if (xspeed < 0) {
       xspeed += drag;
@@ -127,7 +151,7 @@ class Bean {
     }
 
     //Update de la vitesse en Z (profondeur)
-    if (zspeed > 0) {
+    if (zspeed > drag) {
       zspeed -= drag;
     } else if (zspeed < 0) {
       zspeed += drag;
@@ -141,44 +165,53 @@ class Bean {
     z += zspeed;
 
     //Bounce axe Z
-    if (z > depth)
+    if (z > (zlength - currentSize/2))
     {
-      z = depth;
+      z = zlength - (currentSize/2);
       zspeed = -(zspeed * bounce);
+      backAlpha = bounceReactValue;
     }
 
-    if (z < 0)
+    if (z < (0 + (currentSize/2)))
     {
-      z = 0;
+      z = 0 + (currentSize/2);
       zspeed = -(zspeed * bounce);
+      frontAlpha = bounceReactValue;
     }
 
     //Bounce axe X
-    if (x > (screenSizeX - currentSize/2))
+    if (x > (xlength - currentSize/2))
     {
-      x = (screenSizeX - currentSize/2);
+      x = xlength - (currentSize/2);
       xspeed = -(xspeed * bounce);
+      rightAlpha = bounceReactValue;
     }
-    if (x < (0 + currentSize/2))
+    if (x < (0 + (currentSize/2)))
     {
-      x = 0 + currentSize/2;
+      x = 0 + (currentSize/2);
       xspeed = -(xspeed * bounce);
+      leftAlpha = bounceReactValue;
     }
 
     //Bounce axe Y
-    if (y > (screenSizeY - currentSize/2))
+    if (y > (ylength - currentSize/2))
     {
-      y = (screenSizeY - currentSize/2);
+      y = ylength - (currentSize/2);
+      if (yspeed > gravity) {
+        bottomAlpha = bounceReactValue;
+      }
       yspeed = -(yspeed * bounce);
     }
-    if (y < (0 + currentSize/2))
+    if (y < (0 + (currentSize/2)))
     {
-      y = 0+ currentSize/2;
+      y = 0 + (currentSize/2);
       yspeed = -(yspeed * bounce);
+      topAlpha = bounceReactValue;
     }
 
-    //Ajustement de la taille selon la position en Z (effet de profondeur)
-    currentSize = baseSize * (z * ((1.5/depth)) + 0.25);
+  //Ajustement de la taille actuelle dependamment de la position en Z
+  //currentSize = baseSize * lifetimeRatio * (((0.5/zlength) * (zlength-z)) + 0.5);
+  currentSize = baseSize * lifetimeRatio; 
   }
 
   void printDebug()
@@ -193,7 +226,11 @@ class Bean {
     println(patience);
     print("Energy: ");
     println(energy);
-    print("Z position");
+    print("Position X: ");
+    print(x);
+    print(" Y: ");
+    print(y);
+    print(" Z: ");
     println(z);
   }
 }
