@@ -1,8 +1,8 @@
 float degToRadian = 0.0174533;
 
 //Variables pour la grosseur de l'ecran
-int screenSizeX = 1200;
-int screenSizeY = 1200;
+int screenSizeX = 3000;
+int screenSizeY = 2000;
 
 //Longeurs de cube pour la simulation (aucune incidence sur le visuel)
 int xlength = 1000;
@@ -53,6 +53,7 @@ ArrayList<Bean> beans = new ArrayList<Bean>();
 
 void settings() {
   size(screenSizeX, screenSizeY);
+  //fullScreen();
 }
 
 void setup() {
