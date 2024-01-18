@@ -1,8 +1,8 @@
 float degToRadian = 0.0174533;
 
 //Variables pour la grosseur de l'ecran
-int screenSizeX = 3000;
-int screenSizeY = 2000;
+int screenSizeX = 1600;
+int screenSizeY = 1200;
 
 //Longeurs de cube pour la simulation (aucune incidence sur le visuel)
 int xlength = 1000;
