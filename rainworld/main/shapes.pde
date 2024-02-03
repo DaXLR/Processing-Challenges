@@ -1,55 +1,39 @@
-class coord {
 
-  public float x, y, z;
+solid createCube(float size, float x, float y, float z) {
 
-  coord(float a, float b, float c) {
-    x = a;
-    y = b;
-    z = c;
-  }
+  float halfSize = size/2;
+
+  coord a = new coord(-halfSize, -halfSize, halfSize);
+  coord b = new coord(halfSize, -halfSize, halfSize);
+  coord c = new coord(halfSize, -halfSize, -halfSize);
+  coord d = new coord(-halfSize, -halfSize, -halfSize);
+  coord e = new coord(-halfSize, halfSize, halfSize);
+  coord f = new coord(halfSize, halfSize, halfSize);
+  coord g = new coord(halfSize, halfSize, -halfSize);
+  coord h = new coord(-halfSize, halfSize, -halfSize);
+
+  poly fa = new poly(a, b, c, d);
+  poly fb = new poly(a, e, h, d);
+  poly fc = new poly(b, f, g, c);
+  poly fd = new poly(e, f, g, h);
+  poly fe = new poly(e, f, b, a);
+  poly ff = new poly(g, c, d, h);
+
+  solid cube = new solid();
+
+  cube.addPoly(fa);
+  cube.addPoly(fb);
+  cube.addPoly(fc);
+  cube.addPoly(fd);
+  cube.addPoly(fe);
+  cube.addPoly(ff);
+
+  cube.setPosition(x, y, z);
+
+  return cube;
 }
 
-class poly {
-
-  int sides = 3;
-  //Les polygones peuvent avoir 3 ou 4 cotés dependament du nombre de coordonées passées dans le constructeur
-  //Si utilisées par un solide, les coordonées passé dans un poly devraient être relatives à l'origine du solide et en worldspace
-  ArrayList<coord> points = new ArrayList<coord>();
-  
-  
-  public boolean hasCollision = false;
-  public boolean isVisible = true;
-
-
-  poly(coord a, coord b, coord c)
-  {
-    sides = 3;
-    points.add(a);
-    points.add(b);
-    points.add(c);
-  }
-
-  poly(coord a, coord b, coord c, coord d)
-  {
-    sides = 4;
-    points.add(a);
-    points.add(b);
-    points.add(c);
-    points.add(d);
-  }
-}
-
-class solid {
-
-  ArrayList<poly> polygons = new ArrayList<poly>();
-  
-  void setVisible(boolean set)
-  {
-    for(int i = 0; i < polygons.size(); i ++)
-    {
-      poly p = polygons.get(i);
-      p.isVisible = set;
-    }
-  }
-
+solid createRaindrop(float size) {
+  solid raindrop = new solid();
+  return raindrop;
 }

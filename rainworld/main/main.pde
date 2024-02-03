@@ -1,3 +1,8 @@
+//TODOFaire le renderer pour les shapes au lieux de la sourie
+
+
+
+
 //Variables pour la grosseur de l'ecran
 int screenSizeX = 1200;
 int screenSizeY = 1200;
@@ -24,5 +29,4 @@ void draw(){
   mousePosition.z = 0;
   
   cam.pointToScreenSpace(mousePosition);
-  
 }

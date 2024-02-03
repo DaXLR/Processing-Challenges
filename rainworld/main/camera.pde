@@ -3,10 +3,10 @@ static float toDegrees = 57.2957795;
 
 class camera {
 
-  boolean debug = true;
+  boolean debug = false;
 
   coord position = new coord(0, 0, 0); //Position du point focal et non du plan de projection
-  coord result = new coord(0, 0, 0); //Objet qui est retourné lors du calcul de screenspace
+  coord result = new coord(0, 0, 0); //Objet qui store le résultat du calcul de screenspace
   coord projectorCenter = new coord(0, 0, 0); //Centre de l'écran virtuel de projection
 
   float yaw = 0;
@@ -41,60 +41,16 @@ class camera {
     vHalfAngle = atan((camHeight/2)/focalLength)*toDegrees;
   }
 
-  boolean pointToScreenSpace(coord point)
-  {
-    float xoffset = point.x - position.x;
-    float yoffset = point.y - position.y;
-    float zoffset = point.z - position.z;
-    float distanceOnXYPlane = sqrt(pow(abs(xoffset), 2) + pow(abs(yoffset), 2));
-    float trueDistance = sqrt(pow(distanceOnXYPlane, 2) + pow(abs(zoffset), 2));
+  //Dans les calculs de projection focale, le point b devrait être la position du point focal de la camera
+  //Le distance 'planar' est la distance de la ligne projetée sur le plan XY (ignore la hauteur). Elle sert entre autre à calculer la position angulaire par rapport à la camera
 
+  float getDistance(coord pointa, coord pointb, boolean planar) {
 
-    //Calcul de l'angle horizontal (yaw) du point par rapport au focal point
-    float cartYaw = 0;
-    if (xoffset == 0 && yoffset > 0) {
-      cartYaw = 0;
-    } else if (xoffset == 0 && yoffset < 0) {
-      cartYaw = 180;
-    } else if (xoffset > 0 && yoffset == 0) {
-      cartYaw = 90;
-    } else if (xoffset < 0 && yoffset == 0) {
-      cartYaw = 270;
-    } else if (xoffset > 0 && yoffset > 0) {
-      cartYaw = (atan(xoffset/yoffset));
-    } else if (xoffset > 0 && yoffset < 0) {
-      cartYaw = (atan(abs(yoffset)/xoffset)) + PI/2;
-    } else if (xoffset < 0 && yoffset < 0) {
-      cartYaw = (atan(abs(xoffset)/abs(yoffset))) + PI;
-    } else if (xoffset < 0 && yoffset > 0) {
-      cartYaw = (atan(yoffset/abs(xoffset))) + PI*1.5;
-    }
-    if (cartYaw != yaw){
-    cartYaw -= yaw;
-    }
-    if (cartYaw > PI){
-    cartYaw -= 2*PI;
-    }
-    
-    //Calcul de l'angle vertical (pitch) du point par rapport au focal point
-    float cartPitch = 0;
-    if (zoffset == 0) {
-      cartPitch = 0;
-    } else {
-      cartPitch = atan(zoffset/distanceOnXYPlane);
-    }
-    
-    float screenSpaceX = tan(abs(cartYaw))*focalLength;
-    float screenSpaceY = tan(abs(cartPitch))*focalLength;
-    
-    if (cartYaw < 0){
-      screenSpaceX = -screenSpaceX;
-    }
-    if (cartPitch < 0){
-     screenSpaceY = -screenSpaceY; 
-    }
-
-
+    float xoffset = pointa.x - pointb.x;
+    float yoffset = pointa.y - pointb.y;
+    float zoffset = pointa.z - pointb.z;
+    float planarDistance = sqrt(pow(abs(xoffset), 2) + pow(abs(yoffset), 2));
+    float trueDistance = sqrt(pow(planarDistance, 2) + pow(abs(zoffset), 2));
 
     if (debug)
     {
@@ -103,20 +59,115 @@ class camera {
       print(" Y offset = ");
       print(yoffset);
       print(" Z offset = ");
-      println(zoffset);
-      print("Distance= ");
-      print(trueDistance);
-      print(" Yaw= ");
-      print(cartYaw);
-      print(" Pitch= ");
-      println(cartPitch);
+      print(zoffset);
+      print(" Planar Distance= ");
+      print(planarDistance);
+      print(" True Distance= ");
+      println(trueDistance);
+    }
+
+
+    if (planar) {
+      return planarDistance;
+    } else {
+      return trueDistance;
+    }
+  }
+
+  float getRelativeYaw(coord target, coord source, float sourceYaw) {
+
+    float xoffset = target.x - source.x;
+    float yoffset = target.y - source.y;
+    float yaw = 0;
+
+    if (xoffset == 0 && yoffset > 0) {
+      yaw = 0;
+    } else if (xoffset == 0 && yoffset < 0) {
+      yaw = PI;
+    } else if (xoffset > 0 && yoffset == 0) {
+      yaw = PI/2;
+    } else if (xoffset < 0 && yoffset == 0) {
+      yaw = PI*1.5;
+    } else if (xoffset > 0 && yoffset > 0) {
+      yaw = (atan(xoffset/yoffset));
+    } else if (xoffset > 0 && yoffset < 0) {
+      yaw = (atan(abs(yoffset)/xoffset)) + PI/2;
+    } else if (xoffset < 0 && yoffset < 0) {
+      yaw = (atan(abs(xoffset)/abs(yoffset))) + PI;
+    } else if (xoffset < 0 && yoffset > 0) {
+      yaw = (atan(yoffset/abs(xoffset))) + PI*1.5;
+    }
+    if (yaw != sourceYaw) {
+      yaw -= sourceYaw;
+    }
+    if (yaw > PI) {
+      yaw -= 2*PI;
+    }
+
+    if (debug) {
+      print("Yaw= ");
+      println(yaw);
+    }
+
+    return yaw;
+  }
+
+  float getRelativePitch(coord target, coord source, float sourcePitch) {
+
+    float zoffset = target.z - source.z;
+
+    float pitch = 0;
+    if (zoffset == 0) {
+      pitch = 0;
+    } else {
+      pitch = atan(zoffset/getDistance(target, source, true));
+    }
+    pitch = sourcePitch - pitch;
+
+
+    if (debug) {
+      print("Pitch= ");
+      println(pitch);
+    }
+
+    return pitch;
+  }
+
+
+  boolean pointToScreenSpace(coord point)
+  {
+
+    float cartesianYaw = getRelativeYaw(point, position, yaw);
+    if (cartesianYaw > PI/2 || cartesianYaw < -PI/2) {
+      //Le point est derriere la camera
+      return false;
+    }
+    float cartesianPitch = getRelativePitch(point, position, pitch);
+    if (cartesianPitch > PI/2 || cartesianPitch < -PI/2) {
+      //Le point est derriere la camera
+      return false;
+    }
+
+    float screenSpaceX = tan(abs(cartesianYaw))*focalLength;
+    float screenSpaceY = tan(abs(cartesianPitch))*focalLength;
+
+    if (cartesianYaw < 0) {
+      screenSpaceX = -screenSpaceX;
+    }
+    if (cartesianPitch < 0) {
+      screenSpaceY = -screenSpaceY;
+    }
+
+    result.x = screenSpaceX;
+    result.y = screenSpaceY;
+
+    if (debug)
+    {
       print("Screenspace X = ");
       print(screenSpaceX);
       print(" Screenspace Y = ");
       println(screenSpaceY);
     }
-
-
 
     return true;
   }
