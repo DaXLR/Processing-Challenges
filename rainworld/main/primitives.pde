@@ -108,7 +108,7 @@ class poly {
     strokeWeight(cam.focalLength / points.get(0).distanceToCamera);
     beginShape();
     for (int i = 0; i < points.size(); i++) {
-      coord p = cam.pointToScreenSpace(points.get(i).relative_yaw, points.get(i).relative_pitch);
+      coord p = pointToScreenSpace(points.get(i).relative_yaw, points.get(i).relative_pitch);
       vertex(((cam.camWidth/2)+p.x), ((cam.camHeight/2)+p.y));
     }
     endShape(CLOSE);
@@ -147,9 +147,9 @@ class object {
 
     for (int i = 0; i < polygons.size(); i ++)
     {
-      relative_yaw = cam.getRelativeYaw(position,cam.position,cam.yaw);
-      relative_pitch = cam.getRelativePitch(position, cam.position, cam.pitch);
-      distanceToCamera = cam.getDistance(position, cam.position, false);
+      relative_yaw = getRelativeYaw(position,cam.position,cam.yaw);
+      relative_pitch = getRelativePitch(position, cam.position, cam.pitch);
+      distanceToCamera = getDistance(position, cam.position, false);
       
       poly p = polygons.get(i);
       for (int j = 0; j < p.sides; j++)
@@ -158,12 +158,12 @@ class object {
         c.x = c.original_x + position.x;
         c.y = c.original_y + position.y;
         c.z = c.original_z + position.z;
-        c.distanceToCamera = cam.getDistance(c, cam.position, false);
+        c.distanceToCamera = getDistance(c, cam.position, false);
 
         if (calculateRelativeAngles)
         {
-          c.relative_yaw = cam.getRelativeYaw(c, cam.position, cam.yaw);
-          c.relative_pitch = cam.getRelativePitch(c, cam.position, cam.pitch);
+          c.relative_yaw = getRelativeYaw(c, cam.position, cam.yaw);
+          c.relative_pitch = getRelativePitch(c, cam.position, cam.pitch);
         }
       }
     }

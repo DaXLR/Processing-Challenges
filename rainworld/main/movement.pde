@@ -1,3 +1,16 @@
+//Variables de mouvement
+boolean movingForward = false;
+boolean movingBack = false;
+boolean movingLeft = false;
+boolean movingRight = false;
+boolean tiltRight = false;
+boolean tiltLeft = false;
+boolean tiltUp = false;
+boolean tiltDown = false;
+
+float speed = 10;
+float tiltSpeed = 0.05;
+
 void move() {
   if (movingForward)
   {

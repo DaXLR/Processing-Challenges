@@ -1,16 +1,42 @@
+//Fonctions pour la création de formes et d'objets pré-définis
 
-void createCube(float size, float x, float y, float z) {
+int createPuddle(float size, float x, float y, float z) {
+  coord a = new coord(-1*size, -1*size, 0*size);
+  coord b = new coord(-1*size, 1*size, 0*size);
+  coord c = new coord(1*size, 1*size, 0*size);
+  coord d = new coord(1*size, -1*size, 0*size);
+  coord e = new coord(0*size, 0*size, -1*size);
 
-  float halfSize = size/2;
+  poly fa = new poly(a, b, e);
+  poly fb = new poly(b, c, e);
+  poly fc = new poly(c, d, e);
+  poly fd = new poly(d, a, e);
 
-  coord a = new coord(-halfSize, -halfSize, halfSize);
-  coord b = new coord(halfSize, -halfSize, halfSize);
-  coord c = new coord(halfSize, -halfSize, -halfSize);
-  coord d = new coord(-halfSize, -halfSize, -halfSize);
-  coord e = new coord(-halfSize, halfSize, halfSize);
-  coord f = new coord(halfSize, halfSize, halfSize);
-  coord g = new coord(halfSize, halfSize, -halfSize);
-  coord h = new coord(-halfSize, halfSize, -halfSize);
+  object puddle = new object();
+
+  puddle.addPoly(fa);
+  puddle.addPoly(fb);
+  puddle.addPoly(fc);
+  puddle.addPoly(fd);
+  
+  puddle.setPosition(x,y,z);
+  
+  puddle.type = "PUDDLE";
+  
+  return addObject(puddle);
+}
+
+
+int createCube(float size, float tall, float x, float y, float z) {
+
+  coord a = new coord(-1*size, -1*size, 1*tall);
+  coord b = new coord(1*size, -1*size, 1*tall);
+  coord c = new coord(1*size, -1*size, -1*tall);
+  coord d = new coord(-1*size, -1*size, -1*tall);
+  coord e = new coord(-1*size, 1*size, 1*tall);
+  coord f = new coord(1*size, 1*size, 1*tall);
+  coord g = new coord(1*size, 1*size, -1*tall);
+  coord h = new coord(-1*size, 1*size, -1*tall);
 
   poly fa = new poly(a, b, c, d);
   poly fb = new poly(a, e, h, d);
@@ -18,14 +44,7 @@ void createCube(float size, float x, float y, float z) {
   poly fd = new poly(e, f, g, h);
   poly fe = new poly(e, f, b, a);
   poly ff = new poly(g, c, d, h);
-  
-  fa.setStrokeColor(0,0,0,255);
-  fb.setStrokeColor(0,0,0,255);
-  fc.setStrokeColor(0,0,0,255);
-  fd.setStrokeColor(0,0,0,255);
-  fe.setStrokeColor(0,0,0,255);
-  ff.setStrokeColor(0,0,0,255);
- 
+
   object cube = new object();
 
   cube.addPoly(fa);
@@ -39,10 +58,10 @@ void createCube(float size, float x, float y, float z) {
 
   cube.type = "CUBE";
 
-  addObject(cube);
+  return addObject(cube);
 }
 
-void createDrop(float size, float x, float y, float z)
+int createDrop(float size, float x, float y, float z)
 {
   coord a = new coord(0*size, 0*size, 0*size);
   coord b = new coord(-1*size, -1*size, 2*size);
@@ -92,5 +111,5 @@ void createDrop(float size, float x, float y, float z)
 
   drop.type = "DROP";
 
-  addObject(drop);
+  return addObject(drop);
 }
