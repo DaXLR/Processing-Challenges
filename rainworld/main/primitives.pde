@@ -48,8 +48,6 @@ class poly {
   RGBAColor solidColor = new RGBAColor(0, 0, 0, 0);
   RGBAColor strokeColor = new RGBAColor(255, 255, 255, 255);
 
-
-
   poly(coord a, coord b, coord c)
   {
     sides = 3;
@@ -84,7 +82,6 @@ class poly {
   }
 
   void drawPolygon() {
-
 
     for (int i = 0; i< points.size(); i++)
     {
@@ -124,6 +121,9 @@ class object {
 
   ArrayList<poly> polygons = new ArrayList<poly>();
   coord position = new coord(0, 0, 0);
+  float relative_yaw;
+  float relative_pitch;
+  float distanceToCamera;
 
   boolean toRender = true;
   boolean active = true;
@@ -147,6 +147,10 @@ class object {
 
     for (int i = 0; i < polygons.size(); i ++)
     {
+      relative_yaw = cam.getRelativeYaw(position,cam.position,cam.yaw);
+      relative_pitch = cam.getRelativePitch(position, cam.position, cam.pitch);
+      distanceToCamera = cam.getDistance(position, cam.position, false);
+      
       poly p = polygons.get(i);
       for (int j = 0; j < p.sides; j++)
       {
@@ -186,4 +190,5 @@ class object {
       p.drawPolygon();
     }
   }
+  
 }

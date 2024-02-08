@@ -18,7 +18,14 @@ void createCube(float size, float x, float y, float z) {
   poly fd = new poly(e, f, g, h);
   poly fe = new poly(e, f, b, a);
   poly ff = new poly(g, c, d, h);
-
+  
+  fa.setStrokeColor(0,0,0,255);
+  fb.setStrokeColor(0,0,0,255);
+  fc.setStrokeColor(0,0,0,255);
+  fd.setStrokeColor(0,0,0,255);
+  fe.setStrokeColor(0,0,0,255);
+  ff.setStrokeColor(0,0,0,255);
+ 
   object cube = new object();
 
   cube.addPoly(fa);
@@ -42,7 +49,7 @@ void createDrop(float size, float x, float y, float z)
   coord c = new coord(-1*size, 1*size, 2*size);
   coord d = new coord(1*size, 1*size, 2*size);
   coord e = new coord(1*size, -1*size, 2*size);
-  coord f = new coord(0*size, 0*size, 7*size);
+  coord f = new coord(0*size, 0*size, 12*size);
 
   poly fa = new poly(a, b, e);
   poly fb = new poly(a, b, c);
@@ -54,21 +61,21 @@ void createDrop(float size, float x, float y, float z)
   poly fh = new poly(f, c, b);
 
   fa.setStrokeColor(0, 0, 0, 0);
-  fa.setSolidColor(100, 100, 255, 100);
+  fa.setSolidColor(0, 255, 255, 0);
   fb.setStrokeColor(0, 0, 0, 0);
-  fb.setSolidColor(100, 100, 255, 100);
+  fb.setSolidColor(0, 255, 255, 0);
   fc.setStrokeColor(0, 0, 0, 0);
-  fc.setSolidColor(100, 100, 255, 100);
+  fc.setSolidColor(0, 255, 255, 0);
   fd.setStrokeColor(0, 0, 0, 0);
-  fd.setSolidColor(100, 100, 255, 100);
+  fd.setSolidColor(0, 255, 255, 0);
   fe.setStrokeColor(0, 0, 0, 0);
-  fe.setSolidColor(100, 100, 255, 100);
+  fe.setSolidColor(0, 255, 255, 0);
   ff.setStrokeColor(0, 0, 0, 0);
-  ff.setSolidColor(100, 100, 255, 100);
+  ff.setSolidColor(0, 255, 255, 0);
   fg.setStrokeColor(0, 0, 0, 0);
-  fg.setSolidColor(100, 100, 255, 100);
+  fg.setSolidColor(0, 255, 255, 0);
   fh.setStrokeColor(0, 0, 0, 0);
-  fh.setSolidColor(100, 100, 255, 100);
+  fh.setSolidColor(0, 255, 255, 0);
 
   object drop = new object();
 
