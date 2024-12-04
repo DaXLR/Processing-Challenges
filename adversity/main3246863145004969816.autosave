@@ -1,0 +1,41 @@
+int screenW, screenH;
+float halfScreenW, halfScreenH;
+float projectionPlane = 10;
+
+
+DeltaTime frameTime = new DeltaTime();
+
+void settings() {
+  fullScreen(P2D);
+}
+
+void setup() {
+
+screenW = width;
+screenH = height;
+halfScreenW = screenW / 2;
+halfScreenH = screenH / 2;
+
+  frameRate(60);
+  background(0, 0, 0);
+
+}
+
+void draw() {
+
+background(0, 0, 0);
+
+
+
+updateParticles();
+renderParticles();
+
+
+//println("Frame Time =" + frameTime.getDeltaTime());
+}
+
+void keyPressed() {
+  if (key == 'n') {
+    createParticle(random(-200, 200), random(-200, 0), random(0, 10000), 0, 0, random(-10, 10), random(10000, 50000));
+  }
+}

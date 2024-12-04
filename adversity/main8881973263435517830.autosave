@@ -1,0 +1,31 @@
+int screenSizeX = 800;
+int screenSizeY = 800;
+
+DeltaTime frameTime = new DeltaTime();
+
+void settings() {
+  size(screenSizeX, screenSizeY);
+}
+
+void setup() {
+  frameRate(60);
+  background(0, 0, 0);
+
+}
+
+void draw() {
+
+background(0, 0, 0);
+//create a new random particle
+updateParticles();
+renderParticles();
+
+
+println("Frame Time =" + frameTime.getDeltaTime());
+}
+
+void keyPressed() {
+  if (key == 'n') {
+    createParticle(random(-100, 100), random(-100, 100), random(-100, 100), random(-1, 1), random(-1, 1), random(-1, 1), random(1000, 5000));
+  }
+}
