@@ -2,7 +2,9 @@
 //TODO: Tune particle spawning frequency and behavior, upgrade particle array
 
 DeltaTime frameTime = new DeltaTime();
-float spawnChance = 20;
+float spawnChance = 10;
+
+boolean firstTime = true;
 
 void settings() {
   fullScreen(P2D);
@@ -10,18 +12,19 @@ void settings() {
 
 void setup() {
 
+  loadObjectsFromCSV();
   initScreen();
   frameRate(60);
-  background(0, 0, 0);
-
+  background(skyFog[0], skyFog[1], skyFog[2]);
 }
 
 void draw() {
 
-background(skyFog[0], skyFog[1], skyFog[2]);
+if (millis() < 5000) {
+  return;
+}
 
-//spawnChance += 0.002 * frameTime.getDeltaTime();
-//println(spawnChance);
+background(skyFog[0], skyFog[1], skyFog[2]);
 
 if (particleCount < maxParticles/2) {
   float chance = map(maxParticles/2, 0, 10000, 1, 0);
@@ -35,8 +38,8 @@ updateParticles();
 renderMirroredParticles();
 renderParticles();
 
-println("Particle count = " + particleCount);
-println("Frame Time =" + frameTime.getDeltaTime());
+//println("Particle count = " + particleCount);
+//println("Frame Time =" + frameTime.getDeltaTime());
 }
 
 void keyPressed() {

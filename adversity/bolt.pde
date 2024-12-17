@@ -50,7 +50,8 @@ int id;
         lifetime--;
 
         if (lifetime <= 0) {
-            traceObject(x, y, z, random(5000,20000));
+            int randomObject = int(random(0, shapeObjects.length));
+            traceObject(shapeObjects[randomObject], x, y, z, random(1000,5000));
             destroy();
             return;
         }
@@ -177,37 +178,19 @@ void spawnShapeParticles(float x1, float y1, float z1, float x2, float y2, float
         initVector.x = points[i].x;
         initVector.y = points[i].y;
         initVector.z = points[i].z;
-        initVector.vx = randomGaussian() * 20;
-        initVector.vy = randomGaussian() * 20;
-        initVector.vz = randomGaussian() * 0.2;
+        initVector.vx = randomGaussian() * 40;
+        initVector.vy = randomGaussian() * 40;
+        initVector.vz = randomGaussian() * 0.5;
         initVector.drag = random(0, 100);
-        initVector.gravity = random(0, 20);
-        int index = createParticle(initVector, random(1000, 5000));
+        initVector.gravity = random(0, 30);
+        int index = createParticle(initVector, random(2000, 6000));
         if (index != -1) {
             Particle p = particles[index];
-            p.size = random(300,5000);
+            p.size = random(100,2000);
             p.flicker = random(0, 2);
             p.red = red;
             p.green = green;
             p.blue = blue;
         }
-        /* //Creating the short term particle
-        initVector.x = points[i].x;
-        initVector.y = points[i].y;
-        initVector.z = points[i].z;
-        initVector.vx = randomGaussian() * 5;
-        initVector.vy = randomGaussian() * 5;
-        initVector.vz = randomGaussian() * 0.02;
-        initVector.drag = random(10, 20);
-        initVector.gravity = random(0, 100);
-        index = createParticle(initVector, random(200, 1000));
-        if (index != -1) {
-            Particle p = particles[index];
-            p.size = random(2000,5000);
-            p.flicker = random(100, 500);
-            p.red = skyFog[0];
-            p.green = skyFog[1];
-            p.blue = skyFog[2];
-        } */
     }
 }

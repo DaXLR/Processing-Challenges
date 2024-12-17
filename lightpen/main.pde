@@ -65,10 +65,12 @@ SineWave ax2 = new SineWave((screenSizeX /2 ), 0, 0);
 SineWave ay2 = new SineWave((screenSizeY /2 ), 0, 0);
 
 void settings() {
-  size(screenSizeX, screenSizeY);
+  fullScreen(P2D);
 }
 
 void setup() {
+  screenSizeX = width;
+  screenSizeY = height;
   frameRate(60);
   background(0, 0, 0);
 
